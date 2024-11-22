@@ -35,3 +35,13 @@ jobs:
         with:
             name: cypress-test-report
             path: allure-report/
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: cypress-test-report
+          
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./
