@@ -1,11 +1,11 @@
 {
   "devDependencies": {
-    "@shelex/cypress-allure-plugin": "^2.40.2",
+    "allure-cypress": "^3.0.6",
     "cypress": "^12.2.0"
   },
   "scripts": {
-    "test": "npx cypress run --config video=false --env allure=true --browser chrome --headless || true",
-    "allure:report": "allure generate allure-results",
+    "test": "npx cypress run",
+    "allure:report": "allure serve allure-results",
     "allure:clear": "rm -r allure-results/ allure-report || true",
     "test:cy": "npm run allure:clear && npm run test && npm run allure:report"
   }
