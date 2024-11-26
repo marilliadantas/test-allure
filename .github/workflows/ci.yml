@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write  # Necessário para publicar no GitHub Pages
 
 jobs:
   test:
@@ -26,27 +26,29 @@ jobs:
       - name: Run Cypress tests
         run: npm test
 
-      - name: Generate report
+      - name: Generate Allure Report
         run: npm run allure:report
 
-      - name: Test Report
-        uses: actions/upload-artifact@v4
+      - name: Load Allure Report History
+        uses: actions/checkout@v3
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages  # Diretório onde o histórico será salvo
+
+      - name: Build Allure Report
+        uses: simple-elf/allure-report-action@v1.7
         if: always()
         with:
-            name: cypress-test-report
-            path: allure-report/
+          gh_pages: gh-pages
+          allure_results: allure-results  # Ajuste este caminho conforme sua configuração
+          allure_history: allure-history
 
-      - name: Allure Report action from marketplace
-        uses: simple-elf/allure-report-action@master
+      - name: Publish Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         if: always()
-        id: allure-report
         with:
-              allure_results: allure-results
-              gh_pages: cypress-test-report
-              allure_report: allure-report
-              allure_history: allure-history
-
-      # - name: Download Artifacts
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: cypress-test-report
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
