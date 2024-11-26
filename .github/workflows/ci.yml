@@ -21,7 +21,7 @@ jobs:
           npm install -g allure-commandline
 
       - name: Run Cypress tests
-        run: npm test:cy
+        run: npm run test:cy
 
       # - name: Generate report
       #   run: npm run allure:report
