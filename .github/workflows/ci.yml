@@ -18,29 +18,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
- steps:
-  - name: Install dependencies
-    run: |
-      npm install
-      npm install -g allure-commandline
-  - name: Run Cypress tests
-    run: npm test
-  - name: Generate Allure Report
-    run: 'npm run allure:report'
-  - name: Upload Allure Report
-    uses: actions/upload-artifact@v4
-    if: always()
-    with:
-      name: cypress-test-report
-      path: allure-report/
-  - task: AllureGenerate@1
-    inputs:
-      resultsDir: $(build.artifactstagingdirectory)\allure-results
-      targetDir: allure-report/$(Build.BuildNumber)
-  - task: PublishAllureReport@1
-    inputs:
-      reportDir: allure-report/$(Build.BuildNumber)
-  - name: Download Allure Report
-    uses: actions/download-artifact@v4
-    with:
-      name: cypress-test-report
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install -g allure-commandline
+
+      - name: Run Cypress tests
+        run: npm test
+
+      - name: Generate report
+        run: npm run allure:report
+
+      - name: Test Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+            name: cypress-test-report
+            path: allure-report/
+
+      - name: Allure Report action from marketplace
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        id: allure-report
+        with:
+              allure_results: allure-results
+              gh_pages: cypress-test-report
+              allure_report: allure-report
+              allure_history: allure-history
+
+      # - name: Download Artifacts
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: cypress-test-report
