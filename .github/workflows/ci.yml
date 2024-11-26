@@ -7,6 +7,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -23,17 +26,12 @@ jobs:
       - name: Run Cypress tests
         run: npm test
 
-      - name: Generate report
-        run: npm run test:cy
+      - name: Generate Allure Report
+        run: allure generate allure-results --clean
 
-      - name: Test Report
-        uses: actions/upload-artifact@v4
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v3
         if: always()
         with:
-            name: cypress-test-report
-            path: allure-report/
-
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: cypress-test-report
+          name: allure-report
+          path: allure-report/
