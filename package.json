@@ -1,7 +1,7 @@
 {
   "devDependencies": {
     "@shelex/cypress-allure-plugin": "^2.40.2",
-    "cypress": "^12.2.0"
+    "cypress": "^13.16.0"
   },
   "scripts": {
     "test": "npx cypress run --config video=false --env allure=true --browser chrome --headless",
